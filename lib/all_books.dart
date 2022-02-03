@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_get_api/article_info.dart';
+import 'package:flutter_get_api/call_api.dart';
 import 'package:flutter_get_api/text_widget.dart';
 
 class AllBooks extends StatefulWidget {
@@ -9,7 +13,20 @@ class AllBooks extends StatefulWidget {
 }
 
 class _AllBooksState extends State<AllBooks> {
-  var articles = "";
+  var articles = <ArticleInfo>[];
+
+  @override
+  void initState() {
+    _getArticles();
+    super.initState();
+  }
+
+  _getArticles() {
+    CallApi().getPublicData('get').then((response) {
+      Iterable list = json.decode(response.body);
+      articles = list.map((model) => ArticleInfo.fromJson(model)).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
